@@ -126,6 +126,11 @@ module.exports = BaseTypes => {
     toSql() {
       return 'DATETIMEOFFSET';
     }
+
+    _stringify(date, options) {
+      date = this._applyTimezone(date, options);
+      return date.format('YYYY-MM-DD HH:mm:ss.SSS');
+    }
   }
 
   class DATEONLY extends BaseTypes.DATEONLY {
