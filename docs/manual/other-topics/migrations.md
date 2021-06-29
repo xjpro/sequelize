@@ -93,7 +93,7 @@ This will:
 
 ## Running Migrations
 
-Until this step, we haven't inserted anything into the database. We have just created required model and migration files for our first model `User`. Now to actually create that table in database you need to run `db:migrate` command.
+Until this step, we haven't inserted anything into the database. We have just created the required model and migration files for our first model, `User`. Now to actually create that table in the database you need to run `db:migrate` command.
 
 ```text
 npx sequelize-cli db:migrate
@@ -107,15 +107,15 @@ This command will execute these steps:
 
 ## Undoing Migrations
 
-Now our table has been created and saved in database. With migration you can revert to old state by just running a command.
+Now our table has been created and saved in the database. With migration you can revert to old state by just running a command.
 
-You can use `db:migrate:undo`, this command will revert most recent migration.
+You can use `db:migrate:undo`, this command will revert most the recent migration.
 
 ```text
 npx sequelize-cli db:migrate:undo
 ```
 
-You can revert back to initial state by undoing all migrations with `db:migrate:undo:all` command. You can also revert back to a specific migration by passing its name in `--to` option.
+You can revert back to the initial state by undoing all migrations with the `db:migrate:undo:all` command. You can also revert back to a specific migration by passing its name with the `--to` option.
 
 ```text
 npx sequelize-cli db:migrate:undo:all --to XXXXXXXXXXXXXX-create-posts.js
@@ -123,9 +123,9 @@ npx sequelize-cli db:migrate:undo:all --to XXXXXXXXXXXXXX-create-posts.js
 
 ### Creating the first Seed
 
-Suppose we want to insert some data into a few tables by default. If we follow up on previous example we can consider creating a demo user for `User` table.
+Suppose we want to insert some data into a few tables by default. If we follow up on the previous example we can consider creating a demo user for the `User` table.
 
-To manage all data migrations you can use seeders. Seed files are some change in data that can be used to populate database table with sample data or test data.
+To manage all data migrations you can use seeders. Seed files are some change in data that can be used to populate database tables with sample or test data.
 
 Let's create a seed file which will add a demo user to our `User` table.
 
@@ -156,13 +156,13 @@ module.exports = {
 
 ## Running Seeds
 
-In last step you have create a seed file. It's still not committed to database. To do that we need to run a simple command.
+In last step you created a seed file; however, it has not been committed to the database. To do that we run a simple command.
 
 ```text
 npx sequelize-cli db:seed:all
 ```
 
-This will execute that seed file and you will have a demo user inserted into `User` table.
+This will execute that seed file and a demo user will be inserted into the `User` table.
 
 **Note:** _Seeder execution history is not stored anywhere, unlike migrations, which use the `SequelizeMeta` table. If you wish to change this behavior, please read the `Storage` section._
 
@@ -330,6 +330,34 @@ module.exports = {
 };
 ```
 
+The next example is of a migration that creates an unique index composed of multiple fields with a condition, which allows a relation to exist multiple times but only one can satisfy the condition:
+
+```js
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    queryInterface.createTable('Person', {
+      name: Sequelize.DataTypes.STRING,
+      bool: {
+        type: Sequelize.DataTypes.BOOLEAN,
+        defaultValue: false
+      }
+    }).then((queryInterface, Sequelize) => {
+      queryInterface.addIndex(
+        'Person',
+        ['name', 'bool'],
+        {
+          indicesType: 'UNIQUE',
+          where: { bool : 'true' },
+        }
+      );
+    });
+  },
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('Person');
+  }
+}
+```
+
 ### The `.sequelizerc` file
 
 This is a special configuration file. It lets you specify the following options that you would usually pass as arguments to CLI:
@@ -426,7 +454,7 @@ module.exports = {
     dialectOptions: {
       bigNumberStrings: true,
       ssl: {
-        ca: fs.readFileSync(__dirname + '/mysql-ca-master.crt')
+        ca: fs.readFileSync(__dirname + '/mysql-ca-main.crt')
       }
     }
   }
